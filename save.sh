@@ -15,6 +15,10 @@ THIS_DIR=$(dirname "$0")
 cd ${THIS_DIR}
 
 for file in "${FILES_TO_SAVE[@]}"; do
+    git update-index --assume-unchanged "${file}"
+done
+
+for file in "${FILES_TO_SAVE[@]}"; do
     latest_copy=$( ls -t ${SAVE_FOLDER} | grep ${file} | head -n 1)
     latest_copy="${SAVE_FOLDER}/${latest_copy}"
     if [ ! -z ${latest_copy} ]; then

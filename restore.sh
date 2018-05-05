@@ -2,7 +2,7 @@
 
 set -e
 
-FILES_TO_SAVE=( a.cpp a.py )
+FILES_TO_RESTORE=( a.cpp a.py )
 SAVE_FOLDER="submissions"
 
 #############################
@@ -16,7 +16,7 @@ cd ${THIS_DIR}
 
 restore_commands=()
 
-for file in "${FILES_TO_SAVE[@]}"; do
+for file in "${FILES_TO_RESTORE[@]}"; do
     latest_copy=$( ls -t ${SAVE_FOLDER} | grep ${file} | head -n 1)
     latest_copy="${SAVE_FOLDER}/${latest_copy}"
     if [ ! -z ${latest_copy} ]; then
