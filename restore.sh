@@ -2,7 +2,7 @@
 
 set -e
 
-FILES_TO_RESTORE=( a.cpp a.py )
+FILES_TO_RESTORE=( a.cpp a.py data.in )
 SAVE_FOLDER="submissions"
 
 #############################
