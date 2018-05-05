@@ -7,3 +7,5 @@ cd ${THIS_DIR}
 
 cp templates/codejam.cpp a.cpp
 cp templates/default.py a.py
+
+echo "Resetted files to their defaults"
