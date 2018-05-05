@@ -8,6 +8,7 @@
 *.out
 
 # Current Work
+# git update-index --assume-unchanged FILE_NAME
 a.cpp
 a.py
 generate_test.py
