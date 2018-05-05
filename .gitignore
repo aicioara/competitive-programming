@@ -8,6 +8,6 @@
 *.out
 
 # Current Work
-./a.cpp
-./a.py
-./generate_test.py
+a.cpp
+a.py
+generate_test.py
