@@ -30,6 +30,6 @@ for file in "${FILES_TO_SAVE[@]}"; do
 
     DATE=`date '+%Y_%m_%d_%H_%M_%S'`
     new_file_name="${SAVE_FOLDER}/${DATE}_${file}"
-    printf "${GREEN}SUCCESS${NC}: Copied ${file}\n"
     cp "${file}" "${new_file_name}"
+    printf "${GREEN}SUCCESS${NC}: Copied ${file}\n"
 done
