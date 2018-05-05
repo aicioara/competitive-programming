@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 FILES_TO_SAVE=( a.cpp a.py )
 SAVE_FOLDER="submissions"
 
@@ -13,8 +15,10 @@ cd ${THIS_DIR}
 for file in "${FILES_TO_SAVE[@]}"; do
     latest_copy=$( ls -t ${SAVE_FOLDER} | grep ${file} | head -n 1)
     if [ ! -z ${latest_copy} ]; then
+        set +e
         cmp --silent "${file}" "${latest_copy}"
         rc=$?
+        set -e
         if [ $rc -ne 0 ]; then
             printf "${YELLOW}SKIPPED${NC}: ${file} == ${latest_copy}\n"
             continue
