@@ -7,6 +7,9 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
+THIS_DIR=$(dirname "$0")
+cd ${THIS_DIR}
+
 for file in "${FILES_TO_SAVE[@]}"; do
     latest_copy=$( ls -t ${SAVE_FOLDER} | grep ${file} | head -n 1)
     if [ ! -z ${latest_copy} ]; then
