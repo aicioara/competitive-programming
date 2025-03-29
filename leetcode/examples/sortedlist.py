@@ -1,33 +1,20 @@
-from sortedcontainers import SortedList # type: ignore
 from typing import *
+from sortedcontainers import SortedList
 
-class TaskManager:
-    def __init__(self, tasks: List[List[int]]):
-        self.q = SortedList()
-        self.d = {}
+class AVL:
+    def __init__(self, vals=None):
+        if vals is not None:
+            self.q = SortedList(vals)
+        else:
+            self.q = SortedList()
 
-        for t in tasks:
-            userId, taskId, priority = t
-            self.add(userId, taskId, priority)
+    def add(self, val): self.q.add(val)
+    def push(self, val): self.q.add(val)
 
-    def add(self, userId: int, taskId: int, priority: int) -> None:
-        task = [priority, taskId, userId]
-        self.d[taskId] = task
-        self.q.add(task)
+    def discard(self, val): self.q.discard(val)
+    def remove(self, val): self.q.discard(val)
 
+    def pop(self): return self.q.pop()
 
-    def edit(self, taskId: int, newPriority: int) -> None:
-        task = self.d[taskId]
-        self.rmv(taskId)
-        self.add(task[2], task[1], newPriority)
-
-    def rmv(self, taskId: int) -> None:
-        task = self.d[taskId]
-        self.q.discard(task)
-
-
-    def execTop(self) -> int:
-        if len(self.q) == 0:
-            return -1
-        task = self.q.pop()
-        return task[2]
+    def __str__(self): return str(self.q)
+    def __repr__(self): return repr(self.q)

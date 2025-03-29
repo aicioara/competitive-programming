@@ -1,27 +1,34 @@
 import inspect
 import sys
 
-from mytypes import *
+from utils.mytypes import *
 
 import_statement = "from typing import *\n"
+extra_imports = """
+import collections, math, heapq, bisect
+"""
 
 def main():
-    with open('solution.py', 'r') as fd:
-        lines = fd.readlines()
-    if lines[0] != import_statement:
-        with open('solution.py', 'w') as fd:
-            fd.writelines([import_statement] + lines)
+    try:
+        with open('solution.py', 'r') as fd:
+            lines = fd.readlines()
+        if lines[0] != import_statement:
+            with open('solution.py', 'w') as fd:
+                fd.writelines([import_statement, extra_imports] + lines)
 
-    from solution import Solution
+        from solution import Solution
 
-    methods = inspect.getmembers(Solution, predicate=inspect.isfunction)
-    candidate_methods = [(name, m) for name, m in methods if not name.startswith('_')]
-    if len(candidate_methods) != 1:
-        sys.stderr.writelines([f"Expected exactly 1 method, but found {len(candidate_methods)} ({candidate_methods})"])
-        return 1
-    name, method = candidate_methods[0]
-    sig = inspect.signature(method)
-    params_sets = get_params(len(sig.parameters) - 1)
+        methods = inspect.getmembers(Solution, predicate=inspect.isfunction)
+        candidate_methods = [(name, m) for name, m in methods if not name.startswith('_')]
+        if len(candidate_methods) != 1:
+            sys.stderr.writelines([f"Expected exactly 1 method, but found {len(candidate_methods)} ({candidate_methods})"])
+            return 1
+        name, method = candidate_methods[0]
+        sig = inspect.signature(method)
+        params_sets = get_params(len(sig.parameters) - 1)
+    except BaseException as e:
+        sys.stderr.write(f"ERROR: {e}")
+        return
     solution = Solution()
     for params in params_sets:
         print(f"Calling {name}({params})")
@@ -34,8 +41,9 @@ def main():
 
 
 def get_params(n):
-    with open('input_single.txt', 'r') as fd:
-        lines = [line.strip() for line in fd.readlines() if len(line.strip()) != 0]
+    lines = []
+    # with open('input_single.txt', 'r') as fd:
+    #     lines = [line.strip() for line in fd.readlines() if len(line.strip()) != 0]
     if len(lines) == 0:
         with open('input.txt', 'r') as fd:
             lines = [line.strip() for line in fd.readlines() if len(line.strip()) != 0]
