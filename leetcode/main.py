@@ -181,6 +181,11 @@ def get_params(n, get_answers=False):
     return params, answers
 
 
+def is_debugger():
+    import sys
+    return hasattr(sys, 'gettrace') and sys.gettrace() is not None
+
+
 def run_tester():
     from testers.shuffler_tester import run
     run()
