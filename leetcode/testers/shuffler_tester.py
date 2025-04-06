@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import functools, itertools
 import inspect
 import random
@@ -7,16 +9,10 @@ from typing import *
 
 def run():
     sys.path.append(".."); from solution import Solution
+    from testers.slow_solution import SlowSolution
 
-    methods = inspect.getmembers(Solution, predicate=inspect.isfunction)
-    candidate_methods = [(name, m) for name, m in methods if not name.startswith('_')]
-    if len(candidate_methods) != 1:
-        sys.stderr.writelines([f"Expected exactly 1 method, but found {len(candidate_methods)} ({candidate_methods})"])
-        return 1
-    _, method = candidate_methods[0]
-
-    solution = functools.partial(method, Solution())
-    slow_solution = SlowSolution().solve
+    solution = _bind_primary_method(Solution)
+    slow_solution = _bind_primary_method(SlowSolution)
 
     for i, params in enumerate(generate_test_cases()):
         expected = slow_solution(*params)
@@ -28,41 +24,31 @@ def run():
             print(f"Got {actual}")
             break
         else:
-            print(f"Success {i+1}: {params}")
+            print(f"✅ Success {i+1}: {params}")
+
+
+def _bind_primary_method(cls):
+    methods = inspect.getmembers(cls, predicate=inspect.isfunction)
+    candidate_methods = [(name, m) for name, m in methods if not name.startswith('_')]
+    if len(candidate_methods) != 1:
+        sys.stderr.writelines([f"Expected exactly 1 method, but found {len(candidate_methods)} ({candidate_methods})"])
+        return 1
+    _, method = candidate_methods[0]
+    return functools.partial(method, cls())
+
 
 def generate_test_cases():
-    yield (0, [100] * 4000, 90, 0.5)
-    yield (0, [13, 15, 16], 8, 0.44)
+    yield (1, 2)
+    yield (-1, -5)
     while True:
         min_val = random.randint(1, 20)
         max_val = random.randint(1, 20)
         if min_val >= max_val:
             continue
-        total = random.randint(1, 3)
+        total = random.randint(2, 5)
         V = [random.randint(min_val, max_val) for _ in range(total)]
-        C = random.randint(1, 10)
-        S = random.randint(0, 100) / 100
-        yield 0, V, C, S
+        yield V[0], V[1]
 
 
-class SlowSolution:
-    def solve(self, N: int, V: List[int], C: int, S: float):
-        best = 0
-        indices = list(range(len(V)))
-        for i in range(1, len(V) + 1):
-            for picks in itertools.combinations(indices, i):
-                curr = get_total(V, C, S, set(picks))
-                if curr > best:
-                    best = curr
-        return best
-
-def get_total(V, C, S, picks):
-    total = 0
-    cum = 0.0
-    for i, v in enumerate(V):
-        cum += v
-        if i in picks and cum - C > 0:
-            total += cum - C
-            cum = 0
-        cum = cum * (1-S)
-    return total
+if __name__ == "__main__":
+    run()
